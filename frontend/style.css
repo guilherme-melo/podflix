@@ -1,0 +1,205 @@
+body {
+    font-family: 'Gotham', sans-serif;
+    background-color: #000;
+    color: #fff;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.home-logo {
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    flex-direction: column;
+    display: flex;
+}
+
+.home-logo h2{
+    font-size: 8rem;
+    font-weight: bold;
+    color: #ff0000; 
+    margin: 0;
+}
+
+.home-logo p {
+    font-size: 1rem;
+    color: white;
+    font-style: italic;
+}
+
+.logo {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff0000; /* vermelho */
+}
+
+.logo a {
+    text-decoration: none;
+    color: #ff0000;
+}
+
+.main {
+    padding: 20px;
+    display: flex;
+}
+
+.home-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size:larger;
+}
+
+.homeoption {
+    margin: 10px;
+}
+
+.homeoption a {
+    text-decoration: none;
+    color: #fff;
+    padding: 20px;
+    border: 2px solid red;
+    border-radius: 5px;
+}
+
+.homeoption a:hover {
+    background-color: darkred;
+    opacity: 0.8;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.options {
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+    text-align: center;
+}
+
+.option {
+    margin: 10px;
+    align-items: center;
+}
+
+.options fieldset {
+    border: none;
+    padding: 20px;
+    margin: 20px; 
+}
+
+.options legend {
+    color: #ff0000;
+    font-weight: bold; 
+    font-size: 1.2rem; 
+}
+
+.options .option input[type="radio"]:checked + label {
+    color: #ff0000; 
+    font-weight: bold;
+}
+
+nav {
+    display: flex;
+}
+   
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+   
+nav a:hover {
+    background-color: red;
+}
+   
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    flex-direction: column;
+}
+   
+.search-container input[type="text"] {
+    width: 50%;
+    padding: 15px;
+    margin: 5px 0;
+}
+   
+.search-container button {
+    width: 15%;
+    padding: 15px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+   
+.search-container button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    font-weight: bold;
+}
+   
+.recommendation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    flex-direction: column;
+}
+   
+.recommendation-content {
+    text-align: center;
+}
+
+.recommendation-content h2 {
+    color: #ff0000;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.recommendation-container button {
+    padding: 15px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+   
+.recommendation-container button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    font-weight: bold;
+}
+
+#podcastSelect {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 2px solid #ff0000;
+    background-color: #000;
+    color: #fff;
+}
+
+#podcastSelect option {
+    background-color: #000;
+    color: #fff;
+}
+
+#podcastSelect:focus {
+    outline: none;
+    background-color: darkred;
+}
+
+#podcastSelect:hover {
+    cursor: pointer;
+}
