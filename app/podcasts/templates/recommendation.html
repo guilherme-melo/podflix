@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PodFlix</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gotham:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">PodFlix</a>
+        </div>
+        <nav>
+            <a href="search_by_topic.html">Pesquise por assunto</a>
+            <a href="recommendation.html">Recomendação</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="recommendation-container">
+            <div class="recommendation-content">
+                <div class="options">
+                    <fieldset>
+                        <legend>Escolha um modelo:</legend>
+                        <div class="option">
+                            <input type="radio" id="model1" name="model" value="model1">
+                            <label for="model1">Modelo 1</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="model2" name="model" value="model2">
+                            <label for="model2">Modelo 2</label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <h2>Escolha um podcast:</h2>
+
+                <select id="podcastSelect">
+
+                    {% for episode in episodes %}
+                    <option value="{{episode.id}}">{{episode.title}}</option>
+                    {%endfor %}
+                </select>
+                <button id="recommendButton">Recomendar</button>
+            </div>
+        </div>
+
+        <div class="results">
+            <!-- Aqui serão exibidos os resultados da recomendação -->
+        </div>
+    </main>
+
+    <footer>
+        <!-- Rodapé, se desejar -->
+    </footer>
+</body>
+</html>
