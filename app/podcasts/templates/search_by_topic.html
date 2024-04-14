@@ -10,16 +10,15 @@
 <body>
     <header>
         <div class="logo">
-            <a href="index.html">PodFlix</a>
+            <a href="{% url 'index' %}">PodFlix</a>
         </div>
         <nav>
-            <a href="search_by_topic.html">Pesquise por assunto</a>
+            <a href="{% url 'search_by_topic' %}">Pesquise por assunto</a>
             <a href="recommendation.html">Recomendação</a>
         </nav>
     </header>
 
     <main>
-        
         <div class="search-container">
             <div class="options">
                 <fieldset>

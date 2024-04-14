@@ -10,45 +10,22 @@
 <body>
     <header>
         <div class="logo">
-            <a href="index.html">PodFlix</a>
+            <a href="{% url 'index' %}">PodFlix</a>
         </div>
         <nav>
-            <a href="search_by_topic.html">Pesquise por assunto</a>
-            <a href="recommendation.html">Recomendação</a>
+            <a href="{% url 'search_by_topic' %}">Pesquise por assunto</a>
+            <a href="{% url 'recommendation'%}">Recomendação</a>
         </nav>
     </header>
 
     <main>
         <div class="recommendation-container">
             <div class="recommendation-content">
-                <div class="options">
-                    <fieldset>
-                        <legend>Escolha um modelo:</legend>
-                        <div class="option">
-                            <input type="radio" id="model1" name="model" value="model1">
-                            <label for="model1">Modelo 1</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" id="model2" name="model" value="model2">
-                            <label for="model2">Modelo 2</label>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <h2>Escolha um podcast:</h2>
-
-                <select id="podcastSelect">
-
-                    {% for episode in episodes %}
-                    <option value="{{episode.id}}">{{episode.title}}</option>
-                    {%endfor %}
-                </select>
-                <button id="recommendButton">Recomendar</button>
+                <form action="{% url 'recommendation' %}" method="GET">
+                    {{ form }}
+                    <input type="submit" value="Pesquisar">
+                </form>
             </div>
-        </div>
-
-        <div class="results">
-            <!-- Aqui serão exibidos os resultados da recomendação -->
         </div>
     </main>
 

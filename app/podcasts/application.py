@@ -164,7 +164,7 @@ class VespaApp:
 
 
     def start_vespa(self):
-        data = pd.read_csv('data/transcribed_podcasts.csv')
+        data = pd.read_csv('app/data/transcribed_podcasts.csv')
         vespa_feed = data.apply(self.transform_row, axis=1).tolist()
 
         app = self.deploy_vespa()
