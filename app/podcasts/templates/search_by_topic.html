@@ -19,53 +19,14 @@
     </header>
 
     <main>
-        <div class="search-container">
-            <div class="options">
-                <fieldset>
-                    <legend>Escolha um modelo:</legend>
-                    <div class="option">
-                        <input type="radio" id="model1" name="model" value="model1">
-                        <label for="model1">Modelo 1</label>
-                    </div>
-                    <div class="option">
-                        <input type="radio" id="model2" name="model" value="model2">
-                        <label for="model2">Modelo 2</label>
-                    </div>
-                </fieldset>
+        <div class="recommendation-container">
+            <div class="recommendation-content">
+                <form action="{% url 'search_by_topic' %}" method="GET">
+                    {{ form }}
+                    <input type="submit" value="Pesquisar">
+                </form>
             </div>
-
-            <input type="text" id="searchInput" placeholder="Digite um assunto...">
-            <button id="searchButton" onclick="searchPodcasts()">Pesquisar</button>
         </div>
-
-        <script>
-            function searchPodcasts() {
-                const searchInput = document.getElementById("searchInput");
-                const searchTerm = searchInput.value;
-                const modelSelect = document.getElementById("modelSelect");
-                const selectedModel = modelSelect.value;
-                // Call the back-end API to search for podcasts based on the search term and selected model
-            }
-           
-            // Use the Fetch API to read the contents of the podcasts.json file
-            fetch('podcasts.json')
-            .then(response => response.json())
-            .then(podcasts => {
-                // Create a new dropdown element
-                const select = document.getElementById('podcastSelect');
-            
-                // Loop through the list of podcasts and create an option element for each one
-                podcasts.forEach(podcast => {
-                    const option = document.createElement('option');
-                    option.value = podcast.value;
-                    option.textContent = podcast.label;
-                    select.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching podcasts:', error);
-            });
-        </script>
     </main>
 
     <footer>

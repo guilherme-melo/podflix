@@ -1,9 +1,14 @@
 from django import forms
 from .models import Episodes
 
-MODELS = (
+RECOMMENDATION_MODELS = (
+    ('semantic', 'SEMANTIC'),
+)
+
+BY_TOPIC_MODELS =(
     ('bm25', 'BM25'),
     ('semantic', 'SEMANTIC'),
+    ('fusion', 'FUSION')
 )
 
 EPISODES = Episodes.objects
@@ -11,7 +16,7 @@ EPISODES = Episodes.objects
 class RecommendationForm(forms.Form):
     model = forms.ChoiceField(
         widget=forms.RadioSelect(attrs={'class': 'options'}),
-        choices=MODELS,
+        choices=RECOMMENDATION_MODELS,
         label="Escolha um modelo"
     )
     episode = forms.ChoiceField(
@@ -20,4 +25,13 @@ class RecommendationForm(forms.Form):
         label="Escolha um podcast"
     )
 
+class ByTopicForm(forms.Form):
+    model = forms.ChoiceField(
+        widget=forms.RadioSelect(attrs={'class': 'options'}),
+        choices=BY_TOPIC_MODELS,
+        label="Escolha um modelo"
+    )
+    topic = forms.CharField(
+        initial= 'Digite um assunto...'
+    )
 
