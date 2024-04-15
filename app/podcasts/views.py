@@ -1,13 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-import pandas as pd
-
 from .forms import RecommendationForm, ByTopicForm
 from .models import Episodes
-#from .application import VespaApp
+from .application import VespaApp
 
-#app = VespaApp()
+app = VespaApp()
 
 def index(request):
     return render(request, "index.html")
@@ -23,19 +21,12 @@ def search_by_topic(request):
                           "form": form
                        })
     else:
-        result = pd.DataFrame({
-            "id": [35, 87],
-            "title": ["Fall Cleareance Sales", "A Very Special Sedaris Christmas"]
-        }).to_html()
         if model == "semantic":
-            pass
-            # result = app.query_semantic(topic).to_html()
+            result = app.query_semantic(topic).to_html()
         elif model == "fusion":
-            pass
-            # result = app.query_fusion(topic).to_html()
+            result = app.query_fusion(topic).to_html()
         elif model == "bm25":
-            pass
-            # result = app.query_bm25(topic).to_html()
+            result = app.query_bm25(topic).to_html()
         else:
             return HttpResponse(f"The model {model} are not on of supported models")
         return render(request,
@@ -57,15 +48,11 @@ def recommendation(request):
                       })
     else:
         if model == "semantic":
-            dummy_data = pd.DataFrame({
-                "id": [35, 87],
-                "title": ["Fall Cleareance Sales", "A Very Special Sedaris Christmas"]
-            })
-            #result = app.query_semantic(Episodes.objects.get(pk=episode).transcript)
+            result = app.query_semantic(Episodes.objects.get(pk=episode).transcript).to_html()
             return render(request,
                           "results.html",
                           {
-                              "result": dummy_data.to_html()
+                              "result": result
                           })
         else:
             return HttpResponse(f"Não podemos executar a busca no episódio {episode} para o modelo {model}")
