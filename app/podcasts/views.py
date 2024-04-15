@@ -23,15 +23,27 @@ def search_by_topic(request):
                           "form": form
                        })
     else:
+        result = pd.DataFrame({
+            "id": [35, 87],
+            "title": ["Fall Cleareance Sales", "A Very Special Sedaris Christmas"]
+        }).to_html()
         if model == "semantic":
-            # result = app.query_semantic(Episodes.objects.get(pk=episode).transcript)
-            return HttpResponse(f"model {model} for topic {topic}")
+            pass
+            # result = app.query_semantic(topic).to_html()
         elif model == "fusion":
-            return HttpResponse(f"model {model} for topic {topic}")
+            pass
+            # result = app.query_fusion(topic).to_html()
         elif model == "bm25":
-            return HttpResponse(f"model {model} for topic {topic}")
+            pass
+            # result = app.query_bm25(topic).to_html()
         else:
             return HttpResponse(f"The model {model} are not on of supported models")
+        return render(request,
+                      "results.html",
+                      {
+                          "result": result
+                      })
+
 
 def recommendation(request):
     model = request.GET.get("model")
@@ -50,6 +62,10 @@ def recommendation(request):
                 "title": ["Fall Cleareance Sales", "A Very Special Sedaris Christmas"]
             })
             #result = app.query_semantic(Episodes.objects.get(pk=episode).transcript)
-            return HttpResponse(dummy_data.to_html())
+            return render(request,
+                          "results.html",
+                          {
+                              "result": dummy_data.to_html()
+                          })
         else:
             return HttpResponse(f"Não podemos executar a busca no episódio {episode} para o modelo {model}")

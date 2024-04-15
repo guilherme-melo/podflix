@@ -203,3 +203,25 @@ nav a:hover {
 #podcastSelect:hover {
     cursor: pointer;
 }
+
+table.dataframe {
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.dataframe th {
+    background-color: black;
+    color: red;
+    font-weight: bold;
+    padding: 8px;
+    text-align: left;
+    border-bottom: 2px solid white;
+}
+
+table.dataframe td {
+    padding: 8px;
+    border-bottom: 1px solid white;
+}
