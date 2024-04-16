@@ -48,7 +48,7 @@ def recommendation(request):
                       })
     else:
         if model == "semantic":
-            result = app.query_semantic(Episodes.objects.get(pk=episode).transcript).to_html()
+            result = app.query_semantic(Episodes.objects.get(pk=episode).transcript)[1:].to_html()
             return render(request,
                           "results.html",
                           {

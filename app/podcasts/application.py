@@ -164,7 +164,7 @@ class VespaApp:
 
 
     def start_vespa(self):
-        data = pd.read_csv('data/transcribed_podcasts.csv') # TODO: change to read from sqlite3
+        data = pd.read_csv('../data/transcribed_podcasts.csv') # TODO: change to read from sqlite3
         vespa_feed = data.apply(self.transform_row, axis=1).tolist()
 
         app = self.deploy_vespa()
