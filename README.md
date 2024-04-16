@@ -6,6 +6,8 @@
 - *[app](app)*: Django project. Container folder for `podcasts` application.
 - *[utils](utils)*: notebooks that are used to reorganizing the data to database.
 
+The code of the PyVespa models is in [app/podcasts/application.py](app/podcasts/application.py).
+
 ### Analysis and Evaluations
 - *[data](data)*: the database in .csv format that is used in the models (side note: it's a TODO for the team to use the `app/db.sqlite3` instead).
 - *[evaluation.ipynb](evaluation.ipynb)*: notebook that contains the evaluation to compare the models.
