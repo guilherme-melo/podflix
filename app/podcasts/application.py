@@ -13,14 +13,16 @@ from vespa.package import (
     GlobalPhaseRanking,
     Function,
 )
-from vespa.deployment import VespaDocker
+from vespa.deployment import VespaDocker, VespaCloud
 import pandas as pd
 
 class VespaApp:
-    def __init__(self):
-        self.docker_check()
+    def __init__(self, cloud=False, key=None, key_location=None):
+        self.cloud = cloud
+        self.key = key
+        self.key_location = key_location
+        self.docker = self.docker_check() if not cloud else None
         self.app = self.start_vespa()
-
 
     def docker_check(self):
         # tava tendo problema de deixar salvo e ficar rodando e ficar duplicando dados
@@ -128,10 +130,20 @@ class VespaApp:
 
 
     def deploy_vespa(self):
-        package = self.create_application()
-
-        vespa_docker = VespaDocker()
-        app = vespa_docker.deploy(application_package=package)
+        if not self.cloud:
+            package = self.create_application()
+            vespa_docker = VespaDocker()
+            app = vespa_docker.deploy(application_package=package)
+        else:
+            package = self.create_application()
+            vespa_cloud = VespaCloud(
+                tenant="grupo5",
+                application="podflix",
+                key_location=self.key_location,
+                key_content=self.key,
+                application_package=package,
+            )
+            app = vespa_cloud.deploy()
 
         return app
 
@@ -164,7 +176,10 @@ class VespaApp:
 
 
     def start_vespa(self):
-        data = pd.read_csv('../data/transcribed_podcasts.csv') # TODO: change to read from sqlite3
+
+
+        data = pd.read_csv('app/podcasts/data/transcribed_podcasts.csv')
+        #data = pd.read_csv('../data/transcribed_podcasts.csv') # TODO: change to read from sqlite3
         vespa_feed = data.apply(self.transform_row, axis=1).tolist()
 
         app = self.deploy_vespa()
