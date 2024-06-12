@@ -1,0 +1,112 @@
+schema doc {
+    document doc {
+        field id type string {
+            indexing: summary
+        }
+        field title type string {
+            indexing: index | summary
+            index: enable-bm25
+        }
+        field description type string {
+            indexing: index | summary
+            index: enable-bm25
+            bolding: on
+        }
+        field lines type array<string> {
+            indexing: index | summary
+            index: enable-bm25
+            bolding: on
+        }
+    }
+    field line_embeddings type tensor<float>(p{}, x[384]) {
+        indexing: input lines | embed | index | attribute
+        attribute {
+            distance-metric: angular
+        }
+        index {
+            hnsw {
+                max-links-per-node: 16
+                neighbors-to-explore-at-insert: 200
+            }
+        }
+    }
+    fieldset default {
+        fields: title, description, lines
+    }
+    rank-profile bm25 {
+        inputs {
+            query(q) tensor<float>(x[384])             
+        
+        }
+        function bm25sum() {
+            expression {
+                bm25(title) + bm25(description) + bm25(lines)
+            }
+        }
+        first-phase {
+            expression {
+                bm25sum
+            }
+        }
+    }
+    rank-profile semantic inherits default {
+        inputs {
+            query(q) tensor<float>(x[384])             
+        
+        }
+        first-phase {
+            expression {
+                cos(distance(field,line_embeddings))
+            }
+        }
+        match-features {
+            closest(line_embeddings)
+        }
+    }
+    rank-profile hybrid inherits semantic {
+        function avg_line_similarity() {
+            expression {
+                reduce(
+                                                                sum(l2_normalize(query(q),x) * l2_normalize(attribute(line_embeddings),x),x),
+                                                                avg,
+                                                                p
+                                                            )
+            }
+        }
+        function max_line_similarity() {
+            expression {
+                reduce(
+                                                                sum(l2_normalize(query(q),x) * l2_normalize(attribute(line_embeddings),x),x),
+                                                                max,
+                                                                p
+                                                            )
+            }
+        }
+        function all_line_similarities() {
+            expression {
+                sum(l2_normalize(query(q),x) * l2_normalize(attribute(line_embeddings),x),x)
+            }
+        }
+        first-phase {
+            expression {
+                cos(distance(field,line_embeddings))
+            }
+        }
+        second-phase {
+            rerank-count: 100
+            expression {
+                firstPhase + avg_line_similarity() + log( bm25(title) + bm25(lines) + bm25(description))
+            }
+        }
+        match-features {
+            closest(line_embeddings)
+            firstPhase
+            bm25(title)
+            bm25(description)
+            bm25(lines)
+            avg_line_similarity
+            max_line_similarity
+            all_line_similarities
+        }
+    }
+}
