@@ -4,8 +4,9 @@ from django.shortcuts import render, redirect
 from .forms import RecommendationForm, ByTopicForm
 from .models import Episodes
 from .application import VespaApp
-api_key_path = "/home/guilherme/.vespa/grupo5.api-key.pem"
+api_key_path = "/Users/cristianolarrea/Documents/fgv/projects-in-data-science/podflix/app/grupo5.api-key.pem"
 app = VespaApp(key_location=api_key_path)
+print("here")
 
 def index(request):
     return render(request, "index.html")
@@ -13,6 +14,7 @@ def index(request):
 def search_by_topic(request):
     model = request.GET.get("model")
     topic = request.GET.get("topic")
+    mv = request.GET.get("mv")
     if model is None or topic is None:
         form = ByTopicForm()
         return render(request,
@@ -22,8 +24,7 @@ def search_by_topic(request):
                        })
     else:
         if model in ["semantic","fusion","bm25"]:
-            result = app.query(model,topic).to_html()
-
+            result = app.query(model, mv, topic).to_html()
         else:
             return HttpResponse(f"The model {model} are not on of supported models")
         return render(request,
@@ -36,6 +37,9 @@ def search_by_topic(request):
 def recommendation(request):
     model = request.GET.get("model")
     episode = request.GET.get("episode")
+    mv = request.GET.get("mv")
+    input = request.GET.get("input")
+    data = None
     if model is None or episode is None:
         form = RecommendationForm()
         return render(request,
@@ -44,8 +48,15 @@ def recommendation(request):
                           "form": form
                       })
     else:
+        if input=="transcript":
+            data = Episodes.objects.get(pk=episode).transcript
+        elif input=="title":
+            data = Episodes.objects.get(pk=episode).title
+        elif input=="desc":
+            data = Episodes.objects.get(pk=episode).description
+
         if model == "semantic":
-            result = app.query(model, Episodes.objects.get(pk=episode).transcript)[1:].to_html()
+            result = app.query(model, mv, input)[1:].to_html()
             return render(request,
                           "results.html",
                           {

@@ -23,16 +23,6 @@ class VespaApp:
         self.key_location = key_location
         self.app = self.start_vespa()
 
-
-    def docker_check(self):
-        # tava tendo problema de deixar salvo e ficar rodando e ficar duplicando dados
-        client = docker.from_env()
-        if 'podflix' in [container.name for container in client.containers.list()]:
-            container = client.containers.get('podflix')
-            container.stop()  
-            container.remove()  
-
-
     def create_application(self):
         package = ApplicationPackage(
             name="podflix",
@@ -198,7 +188,6 @@ class VespaApp:
             application_package=package,
         )
         app = vespa_cloud.deploy()
-
         return app
 
 
@@ -215,21 +204,9 @@ class VespaApp:
             }
         }
 
-
     def callback(self, response:VespaResponse, id:str):
         if not response.is_successful():
             print(f"Error when feeding document {id}: {response.get_json()}")
-
-
-    def hits_as_df(self, response:VespaQueryResponse, fields) -> pd.DataFrame:
-        records = []
-        for hit in response.hits:
-            record = {}
-            for field in fields:
-                record[field] = hit['fields'][field]
-            records.append(record)
-        return pd.DataFrame(records)
-
 
     def start_vespa(self):
         import os
@@ -243,45 +220,51 @@ class VespaApp:
 
         return app
 
+    def query_bm25(self, input_query, return_df = True):
+        with self.app.syncio(connections=1) as session:
+                query = input_query
+                response:VespaQueryResponse = session.query(
+                    yql="select * from sources * where userQuery() limit 10",
+                    query=query,
+                    ranking="bm25"
+                )
+                assert(response.is_successful())
+        if return_df:
+            return self.hits_as_df(response, ['id', 'title'])
+        else:
+            return response
 
+    def query_semantic(self, input_query, return_df = True):
+        with self.app.syncio(connections=1) as session:
+            query = input_query
+            response: VespaQueryResponse = session.query(
+                yql="select * from sources * where ({targetHits:1000}nearestNeighbor(line_embeddings,q)) limit 10",
+                query=query,
+                ranking="semantic",
+                body={"input.query(q)": f"embed({query})"},
+            )
+            assert response.is_successful()
 
-    # def query_bm25(self, input_query):
-    #     with self.app.syncio(connections=1) as session:
-    #             query = input_query
-    #             response:VespaQueryResponse = session.query(
-    #                 yql="select * from sources * where userQuery() limit 10",
-    #                 query=query,
-    #                 ranking="bm25"
-    #             )
-    #             assert(response.is_successful())
-
-    #     return self.hits_as_df(response, ['id', 'title'])
-
-    # def query_semantic(self, input_query):
-    #     with self.app.syncio(connections=1) as session:
-    #         query = input_query
-    #         response: VespaQueryResponse = session.query(
-    #             yql="select * from sources * where ({targetHits:1000}nearestNeighbor(line_embeddings,q)) limit 10",
-    #             query=query,
-    #             ranking="semantic",
-    #             body={"input.query(q)": f"embed({query})"},
-    #         )
-    #         assert response.is_successful()
-
-    #     return self.hits_as_df(response, ['id', 'title'])
+        if return_df:
+            return self.hits_as_df(response, ['id', 'title'])
+        else:
+            return response
     
-    # def query_fusion(self, input_query):
-    #     with self.app.syncio(connections=1) as session:
-    #         query = input_query
-    #         response: VespaQueryResponse = session.query(
-    #             yql="select * from sources * where userQuery() or ({targetHits:1000}nearestNeighbor(line_embeddings,q)) limit 10",
-    #             query=query,
-    #             ranking="fusion",
-    #             body={"input.query(q)": f"embed({query})"},
-    #         )
-    #         assert response.is_successful()
+    def query_fusion(self, input_query, return_df = True):
+        with self.app.syncio(connections=1) as session:
+            query = input_query
+            response: VespaQueryResponse = session.query(
+                yql="select * from sources * where userQuery() or ({targetHits:1000}nearestNeighbor(line_embeddings,q)) limit 10",
+                query=query,
+                ranking="fusion",
+                body={"input.query(q)": f"embed({query})"},
+            )
+            assert response.is_successful()
 
-    #     return self.hits_as_df(response, ["id", "title"])    
+        if return_df:
+            return self.hits_as_df(response, ['id', 'title'])
+        else:
+            return response
 
     def query_MV_bm25(self, input_query, return_df = True):
         with self.app.syncio(connections=1) as session:
@@ -333,14 +316,21 @@ class VespaApp:
         else:
             return response
 
-    def query(self, type_query, input_query, return_df = True):
-        if type_query == 'bm25':
-            return self.query_MV_bm25(input_query, return_df)
-        elif type_query == 'semantic':
-            return self.query_MV_semantic(input_query, return_df)
-        elif type_query == 'hybrid':
-            return self.query_MV_hybrid(input_query, return_df)
-
+    def query(self, type_query, type_mode, input_query, return_df = True):
+        if type_mode == "sim":
+            if type_query == 'bm25':
+                return self.query_MV_bm25(input_query, return_df)
+            elif type_query == 'semantic':
+                return self.query_MV_semantic(input_query, return_df)
+            elif type_query == 'hybrid':
+                return self.query_MV_hybrid(input_query, return_df)
+        else:
+            if type_query == 'bm25':
+                return self.query_bm25(input_query, return_df)
+            elif type_query == 'semantic':
+                return self.query_semantic(input_query, return_df)
+            elif type_query == 'hybrid':
+                return self.query_fusion(input_query, return_df)
             
     def hits_as_df(self, response:VespaQueryResponse, fields) -> pd.DataFrame:
         records = []
@@ -350,105 +340,3 @@ class VespaApp:
                 record[field] = hit['fields'][field]
             records.append(record)
         return pd.DataFrame(records)
-
-
-
-
-
-    # def query_bm25(self, input_query):
-    #     with self.app.syncio(connections=1) as session:
-    #             query = input_query
-    #             response:VespaQueryResponse = session.query(
-    #                 yql="select * from sources * where userQuery() limit 10",
-    #                 query=query,
-    #                 ranking="bm25"
-    #             )
-    #             assert(response.is_successful())
-
-    #     return self.hits_as_df(response, ['id', 'title'])
-
-    # def query_semantic(self, input_query):
-    #     with self.app.syncio(connections=1) as session:
-    #         query = input_query
-    #         response: VespaQueryResponse = session.query(
-    #             yql="select * from sources * where ({targetHits:1000}nearestNeighbor(line_embeddings,q)) limit 10",
-    #             query=query,
-    #             ranking="semantic",
-    #             body={"input.query(q)": f"embed({query})"},
-    #         )
-    #         assert response.is_successful()
-
-    #     return self.hits_as_df(response, ['id', 'title'])
-    
-    # def query_fusion(self, input_query):
-    #     with self.app.syncio(connections=1) as session:
-    #         query = input_query
-    #         response: VespaQueryResponse = session.query(
-    #             yql="select * from sources * where userQuery() or ({targetHits:1000}nearestNeighbor(line_embeddings,q)) limit 10",
-    #             query=query,
-    #             ranking="fusion",
-    #             body={"input.query(q)": f"embed({query})"},
-    #         )
-    #         assert response.is_successful()
-
-    #     return self.hits_as_df(response, ["id", "title"])    
-
-    def query_MV_bm25(self, input_query, return_df = True):
-        with self.app.syncio(connections=1) as session:
-            query = input_query
-            response: VespaQueryResponse = session.query(
-                yql="select * from sources * where userQuery() ",
-                query=query,
-                ranking="bm25",
-                model="bm25",
-            )
-            assert response.is_successful()
-        
-        if return_df:
-            return self.hits_as_df(response, ['id', 'title'])
-        else:
-            return response
-
-
-    def query_MV_semantic(self, input_query, return_df = True):
-        with self.app.syncio(connections=1) as session:
-            query = input_query
-            response: VespaQueryResponse = session.query(
-                yql="select * from sources * where ({targetHits:1000}nearestNeighbor(line_embeddings,q)) ",
-                query=query,
-                ranking="semantic",
-                model="semantic",
-                body={"input.query(q)": f"embed({query})"},
-            )
-            assert response.is_successful()
-
-        if return_df:
-            return self.hits_as_df(response, ['id', 'title'])
-        else:
-            return response
-
-    def query_MV_hybrid(self, input_query, return_df = True):
-        with self.app.syncio(connections=1) as session:
-            query = input_query
-            response: VespaQueryResponse = session.query(
-                  yql="select * from sources * where userQuery() or ({targetHits:1000}nearestNeighbor(line_embeddings,q))",
-                query=query,
-                ranking="hybrid",
-                body={"input.query(q)": f"embed({query})"},
-            )
-            assert response.is_successful()
-
-        if return_df:
-            return self.hits_as_df(response, ['id', 'title'])
-        else:
-            return response
-
-    def query(self, type_query, input_query, return_df = True):
-        if type_query == 'bm25':
-            return self.query_MV_bm25(input_query, return_df)
-        elif type_query == 'semantic':
-            return self.query_MV_semantic(input_query, return_df)
-        elif type_query == 'hybrid':
-            return self.query_MV_hybrid(input_query, return_df)
-
-            
