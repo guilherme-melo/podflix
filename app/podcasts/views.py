@@ -4,8 +4,7 @@ from django.shortcuts import render, redirect
 from .forms import RecommendationForm, ByTopicForm
 from .models import Episodes
 from .application import VespaApp
-api_key_path = "/Users/cristianolarrea/Documents/fgv/projects-in-data-science/podflix/app/grupo5.api-key.pem"
-app = VespaApp(key_location=api_key_path)
+app = VespaApp()
 print("here")
 
 def index(request):
@@ -24,7 +23,7 @@ def search_by_topic(request):
                        })
     else:
         if model in ["semantic","fusion","bm25"]:
-            result = app.query(model, mv, topic).to_html()
+            result = app.query(input_query= topic, type_query=model, MV=mv).to_html()
         else:
             return HttpResponse(f"The model {model} are not on of supported models")
         return render(request,
@@ -56,7 +55,7 @@ def recommendation(request):
             data = Episodes.objects.get(pk=episode).description
 
         if model == "semantic":
-            result = app.query(model, mv, input)[1:].to_html()
+            result = app.query(input_query=data, type_query=model, MV=mv).to_html()
             return render(request,
                           "results.html",
                           {
