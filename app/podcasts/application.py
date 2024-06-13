@@ -72,7 +72,7 @@ class VespaApp:
                             ),
                             Field(
                                 name="embedding_MV",
-                                type="tensor<float>(p{}, x[384])",
+                                type="tensor<float>(p{},x[384])",
                                 indexing=[
                                     "input lines",
                                     "embed",
@@ -408,7 +408,7 @@ class VespaApp:
         with self.app.syncio(connections=1) as session:
             query = input_query
             response: VespaQueryResponse = session.query(
-                yql="select * from sources * where ({targetHits:1000}nearestNeighbor(embedding_MV,q)) ",
+                yql="select * from sources * where ({targetHits:1000}nearestNeighbor(embedding_full,q)) ",
                 query=query,
                 ranking="semantic_full",
                 body={"input.query(q)": f"embed({query})"},
@@ -520,43 +520,12 @@ class VespaApp:
     def query(self, input_query, type_query = "bm25", fields = "full" , MV = True ,  return_df = True):
         # fields in ['title', 'title+drescription', 'full']
         # MV in [True, False]
+        if MV == "sim":
+            MV = True
+        else:
+            MV = False
 
         if MV:
-            if type_query == 'bm25':
-
-                if fields == 'title':
-                    return self.query_bm25_title(input_query, return_df)
-                
-                elif fields == 'title+description':
-                    return self.query_bm25_title_description(input_query, return_df)
-                
-                elif fields == 'full':
-                    return self.query_bm25_full(input_query, return_df)
-                
-            elif type_query == 'semantic':
-                
-                if fields == 'title':
-                    return self.query_semantic_title(input_query, return_df)
-                
-                elif fields == 'title+description':
-                    return self.query_semantic_title_description(input_query, return_df)
-                
-                elif fields == 'full':
-                    return self.query_semantic_full(input_query, return_df)
-
-            elif type_query == 'fusion':
-                
-                if fields == 'title':
-                    return self.query_fusion_title(input_query, return_df)
-                
-                elif fields == 'title+description':
-                    return self.query_fusion_title_description(input_query, return_df)
-                
-                elif fields == 'full':
-                    return self.query_fusion_full(input_query, return_df)
-
-                
-        else:
             if type_query == 'bm25':
 
                 if fields == 'title':
@@ -569,7 +538,7 @@ class VespaApp:
                     return self.query_bm25_MV_full(input_query, return_df)
                 
             elif type_query == 'semantic':
-                    
+                
                 if fields == 'title':
                     return self.query_semantic_title(input_query, return_df)
                 
@@ -578,6 +547,41 @@ class VespaApp:
                 
                 elif fields == 'full':
                     return self.query_semantic_MV_full(input_query, return_df)
+
+            elif type_query == 'fusion':
+                
+                if fields == 'title':
+                    return self.query_fusion_title(input_query, return_df)
+                
+                elif fields == 'title+description':
+                    return self.query_fusion_title_description(input_query, return_df)
+                
+                elif fields == 'full':
+                    return self.query_fusion_MV_full(input_query, return_df)
+
+                
+        else:
+            if type_query == 'bm25':
+
+                if fields == 'title':
+                    return self.query_bm25_title(input_query, return_df)
+                
+                elif fields == 'title+description':
+                    return self.query_bm25_title_description(input_query, return_df)
+                
+                elif fields == 'full':
+                    return self.query_bm25_full(input_query, return_df)
+                
+            elif type_query == 'semantic':
+                    
+                if fields == 'title':
+                    return self.query_semantic_title(input_query, return_df)
+                
+                elif fields == 'title+description':
+                    return self.query_semantic_title_description(input_query, return_df)
+                
+                elif fields == 'full':
+                    return self.query_semantic_full(input_query, return_df)
     
             elif type_query == 'fusion':
                     
@@ -588,6 +592,6 @@ class VespaApp:
                     return self.query_fusion_title_description(input_query, return_df)
                 
                 elif fields == 'full':
-                    return self.query_fusion_MV_full(input_query, return_df)
+                    return self.query_fusion_full(input_query, return_df)
 
 

@@ -23,7 +23,7 @@ def search_by_topic(request):
                        })
     else:
         if model in ["semantic","fusion","bm25"]:
-            result = app.query(input_query= topic, type_query=model, MV=mv).to_html()
+            result = app.query(input_query=topic, type_query=model, MV=mv).to_html()
         else:
             return HttpResponse(f"The model {model} are not on of supported models")
         return render(request,
