@@ -26,7 +26,7 @@ EPISODES = Episodes.objects
 
 class RecommendationForm(forms.Form):
     model = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'options'}),
+        widget=forms.Select(attrs={'class': 'options'}),
         choices=RECOMMENDATION_MODELS,
         label="Escolha um modelo"
     )
@@ -48,16 +48,18 @@ class RecommendationForm(forms.Form):
 
 class ByTopicForm(forms.Form):
     model = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'options'}),
+        widget=forms.Select(attrs={'class': 'options'}),
         choices=BY_TOPIC_MODELS,
         label="Escolha o modelo"
     )
-    mv = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'options'}),
-        choices=MV_MODELS,
+    mv = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class': 'options'}),
+        required=False,
         label="Multi-Vector?"
     )
+    #texto inicial desaparece ao clicar no campo
     topic = forms.CharField(
-        initial= 'Digite um assunto...'
+        widget=forms.TextInput(attrs={'class': 'options', 'placeholder': 'Digite o tópico'}),
+        label="Digite um assunto"
     )
 

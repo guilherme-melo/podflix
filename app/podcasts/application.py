@@ -20,16 +20,19 @@ import pandas as pd
 import os
 
 class VespaApp:
-    def __init__(self, deploy = False, key = None, key_location = None, token_name = None):
+    def __init__(self, deploy = False, key = None, key_location = None, token_name = None, token = None):
         self.key = key
         self.key_location = key_location
         self.token_name = token_name
+        self.token = token
         self.app = self.start_vespa() if deploy else self.connect_vespa()
 
     def connect_vespa(self):
-        with open('token.txt', 'r') as f:
-            token = f.read()
-        os.environ['VESPA_CLOUD_SECRET_TOKEN'] = token
+        if self.token is None:
+            with open('token.txt', 'r') as f:
+                self.token = f.read()
+        
+        os.environ['VESPA_CLOUD_SECRET_TOKEN'] = self.token
         url = "https://bad202d2.b20230ac.z.vespa-app.cloud/"
         app = Vespa(url=url)
         return app
@@ -520,7 +523,7 @@ class VespaApp:
     def query(self, input_query, type_query = "bm25", fields = "full" , MV = True ,  return_df = True):
         # fields in ['title', 'title+drescription', 'full']
         # MV in [True, False]
-        if MV == "sim":
+        if MV == "on":
             MV = True
         else:
             MV = False

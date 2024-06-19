@@ -1,0 +1,17 @@
+m1_bm25_full_resumo: 0.9877899877899878
+m2_bm25_full_resumo: 0.9120879120879121
+m3_bm25_full_resumo: 1.2588522588522588
+count: 819
+m1_semantic_full_resumo: 0.6654456654456654
+m2_semantic_full_resumo: 0.47741147741147744
+m3_semantic_full_resumo: 4.938949938949939
+count: 819
+m1_fusion_full_resumo: 0.8229548229548229
+m2_fusion_full_resumo: 0.6422466422466423
+m3_fusion_full_resumo: 3.236874236874237
+count: 819
+
+m1_bm25_full_title: 0.938949938949939
+m2_bm25_full_title: 0.7350427350427351
+m3_bm25_full_title: 2.0683760683760686
+count: 819
