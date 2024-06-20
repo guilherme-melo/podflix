@@ -1,17 +1,44 @@
-m1_bm25_full_resumo: 0.9877899877899878
-m2_bm25_full_resumo: 0.9120879120879121
-m3_bm25_full_resumo: 1.2588522588522588
-count: 819
-m1_semantic_full_resumo: 0.6654456654456654
-m2_semantic_full_resumo: 0.47741147741147744
-m3_semantic_full_resumo: 4.938949938949939
-count: 819
-m1_fusion_full_resumo: 0.8229548229548229
-m2_fusion_full_resumo: 0.6422466422466423
-m3_fusion_full_resumo: 3.236874236874237
+hr10_semantic_full_title: 0.8095238095238095
+hr1_semantic_full_title: 0.57997557997558
+mrr_semantic_full_title: 0.6734210234210208
 count: 819
 
-m1_bm25_full_title: 0.938949938949939
-m2_bm25_full_title: 0.7350427350427351
-m3_bm25_full_title: 2.0683760683760686
+hr10_semantic_MV_full_title: 0.4652014652014652
+hr1_semantic_MV_full_title: 0.19658119658119658
+mrr_semantic_MV_full_title: 0.3206527599384749
 count: 819
+
+hr10_semantic_full_resumo: 0.6654456654456654
+hr1_semantic_full_resumo: 0.47741147741147744
+mrr_semantic_full_resumo: 0.5681158347824978
+count: 819
+
+hr10_semantic_MV_full_resumo: 0.9621489621489622
+hr1_semantic_MV_full_resumo: 0.7887667887667887
+mrr_semantic_MV_full_resumo: 0.8600867386581672
+count: 819
+
+hr10_fusion_full_title: 0.9401709401709402
+hr1_fusion_full_title: 0.7191697191697192
+mrr_fusion_full_title: 0.8075694587599355
+count: 819
+
+hr10_fusion_MV_full_title: 0.7838827838827839
+hr1_fusion_MV_full_title: 0.4432234432234432
+mrr_fusion_MV_full_title: 0.5649447113732797
+count: 819
+
+hr10_fusion_full_resumo: 0.8693528693528694
+hr1_fusion_full_resumo: 0.6422466422466423
+mrr_fusion_full_resumo: 0.7284792368125695
+count: 819
+
+hr10_fusion_MV_full_resumo: 0.9938949938949939
+hr1_fusion_MV_full_resumo: 0.8827838827838828
+mrr_fusion_MV_full_resumo: 0.932589324255991
+count: 819
+hr10_bm25_full_resumo: 0.9877899877899878
+hr1_bm25_full_resumo: 0.9120879120879121
+mrr_bm25_full_resumo: 0.9456319694414935
+count: 819
+

@@ -523,14 +523,14 @@ class VespaApp:
     def query(self, input_query, type_query = "bm25", fields = "full" , MV = True ,  return_df = True):
         # fields in ['title', 'title+drescription', 'full']
         # MV in [True, False]
-        if MV == "on":
-            MV = True
-        else:
-            MV = False
+        # if MV == "on":
+        #     MV = True
+        # else:
+        #     MV = False
 
         if MV:
             if type_query == 'bm25':
-
+                
                 if fields == 'title':
                     return self.query_bm25_title(input_query, return_df)
                 
@@ -541,7 +541,6 @@ class VespaApp:
                     return self.query_bm25_MV_full(input_query, return_df)
                 
             elif type_query == 'semantic':
-                
                 if fields == 'title':
                     return self.query_semantic_title(input_query, return_df)
                 

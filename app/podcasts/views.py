@@ -54,7 +54,7 @@ def recommendation(request):
         elif input=="desc":
             data = Episodes.objects.get(pk=episode).description
 
-        if model == "semantic":
+        if model in ["semantic"]:
             result = app.query(input_query=data, type_query=model, MV=mv).to_html()
             return render(request,
                           "results.html",

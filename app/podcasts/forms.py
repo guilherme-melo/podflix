@@ -31,13 +31,13 @@ class RecommendationForm(forms.Form):
         label="Escolha um modelo"
     )
     input = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'options'}),
+        widget=forms.Select(attrs={'class': 'options'}),
         choices=INPUT_MODELS,
-        label="Escolha qual dado usar para a query"
+        label="Escolha qual dado usar para busca"
     )
-    mv = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'options'}),
-        choices=MV_MODELS,
+    mv = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class': 'options'}),
+        required=False,
         label="Multi-Vector?"
     )
     episode = forms.ChoiceField(
