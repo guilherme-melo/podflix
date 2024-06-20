@@ -427,7 +427,7 @@ class VespaApp:
         with self.app.syncio(connections=1) as session:
             query = input_query
             response: VespaQueryResponse = session.query(
-                yql="select * from sources * where ({targetHits:1000}nearestNeighbor(embedding_MV,q)) ",
+                yql="select * from sources * where ({targetHits:1000}nearestNeighbor(embedding_title_description,q)) ",
                 query=query,
                 ranking="semantic_title_description",
                 body={"input.query(q)": f"embed({query})"},
@@ -443,7 +443,7 @@ class VespaApp:
         with self.app.syncio(connections=1) as session:
             query = input_query
             response: VespaQueryResponse = session.query(
-                yql="select * from sources * where ({targetHits:1000}nearestNeighbor(embedding_MV,q)) ",
+                yql="select * from sources * where ({targetHits:1000}nearestNeighbor(embedding_title,q)) ",
                 query=query,
                 ranking="semantic_title",
                 body={"input.query(q)": f"embed({query})"},

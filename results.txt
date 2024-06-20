@@ -37,8 +37,38 @@ hr10_fusion_MV_full_resumo: 0.9938949938949939
 hr1_fusion_MV_full_resumo: 0.8827838827838828
 mrr_fusion_MV_full_resumo: 0.932589324255991
 count: 819
+
 hr10_bm25_full_resumo: 0.9877899877899878
 hr1_bm25_full_resumo: 0.9120879120879121
 mrr_bm25_full_resumo: 0.9456319694414935
+count: 819
+
+hr10_bm25_full_title: 0.9388753056234719
+hr1_bm25_full_title: 0.7347188264058679
+mrr_bm25_full_title: 0.8181538137222737
+count: 818
+
+hr10_bm25_full_description: 0.978021978021978
+hr1_bm25_full_description: 0.8888888888888888
+mrr_bm25_full_description: 0.9283149390292249
+count: 819
+
+hr10_fusion_full_description: 0.9816849816849816
+hr1_fusion_full_description: 0.8827838827838828
+mrr_fusion_full_description: 0.922964205107063
+count: 819
+
+hr10_fusion_MV_full_description: 0.945054945054945
+hr1_fusion_MV_full_description: 0.7216117216117216
+mrr_fusion_MV_full_description: 0.8046878165925787
+count: 819
+
+hr10_fusion_title_description_resumo: 0.48717948717948717
+hr1_fusion_title_description_resumo: 0.29181929181929184
+mrr_fusion_title_description_resumo: 0.40197210197209937
+count: 819
+hr10_bm25_title_description_resumo: 0.48473748473748474
+hr1_bm25_title_description_resumo: 0.27472527472527475
+mrr_bm25_title_description_resumo: 0.38671888076649735
 count: 819
 
